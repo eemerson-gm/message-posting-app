@@ -1,12 +1,15 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import {createRoot} from 'react-dom/client';
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
+import { Navbar, Container, Nav } from "react-bootstrap";
 import './style.css';
 
-ReactDOM.render(
+const rootElement = document.getElementById('root');
+const root = createRoot(rootElement);
+
+root.render(
     <>
         <Helmet>
             <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,6 +34,5 @@ ReactDOM.render(
                 <App />
             </BrowserRouter>
         </React.StrictMode>
-    </>,
-    document.getElementById("root")
+    </>
 );
