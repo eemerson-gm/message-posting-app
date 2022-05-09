@@ -12,6 +12,7 @@ class Main extends Component {
             maxletters: 64,
         }
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     async handleSubmit(event) {
@@ -32,6 +33,10 @@ class Main extends Component {
             this.setState({ text: "" });
         }
     }
+
+    handleChange(event) {
+        this.setState({ text: event.target.value, letters: event.target.value.length });
+    }
     
     render(){
         return(<>
@@ -41,7 +46,7 @@ class Main extends Component {
                                 <Form onSubmit={this.handleSubmit}>
                                     <FormGroup>
                                         <Form.Label className="m-0 classy">Say something!</Form.Label>
-                                        <FormControl type="text" id="messagebox" placeholder="Write a short message here..." maxLength={this.state.maxletters} value={this.state.text} onChange={(e) => this.setState({ text: e.target.value, letters: e.target.value.length })}/>
+                                        <FormControl type="text" id="messagebox" placeholder="Write a short message here..." maxLength={this.state.maxletters} value={this.state.text} onChange={this.handleChange}/>
                                         <Form.Label className="m-0 mt-1">Remaning: {this.state.letters}/{this.state.maxletters}</Form.Label>
                                     </FormGroup>
                                     <Button className="mt-2" variant="primary" type="submit">Submit</Button>
