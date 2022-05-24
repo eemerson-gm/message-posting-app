@@ -38,12 +38,11 @@ class Signup extends React.Component {
         if(!validateEmail.test(this.state.email)){ this.setState({ error_email: "*Email is not valid" }); return; }
 
         let salt = bcrypt.genSaltSync(10);
-        let hash_email = bcrypt.hashSync(this.state.email, salt);
         let hash_password = bcrypt.hashSync(this.state.password, salt);
 
         let account = {
             username: this.state.username,
-            email: hash_email,
+            email: this.state.email,
             password: hash_password,
         }
         await fetch("http://localhost:5000/api/accounts/add", {

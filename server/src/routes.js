@@ -4,12 +4,11 @@ const dbo = require('./connect');
 const ObjectId = require("mongodb").ObjectId;
 
 // Messages
-routes.route("/api/messages/list").get(function (req, res) {
+routes.route("/api/messages/list").post(function (req, res) {
     let db_connect = dbo.getDatabase();
+    console.log(req.body.offset)
     db_connect
-    .collection("messages")
-    .find({})
-    .toArray(function (err, result) {
+    .collection("messages").find({}).skip(req.body.offset).limit(req.body.limit).sort({_id:-1}).toArray(function (err, result) {
         if (err) throw err;
         res.json(result);
     });
@@ -19,11 +18,11 @@ routes.route("/api/messages/add").post(function (req, res) {
     let message = {
         id: req.body.id,
         text: req.body.text,
+        date: req.body.date,
         likes: 0
     }
     db_connect
-    .collection("messages")
-    .insertOne(message, function (err, response) {
+    .collection("messages").insertOne(message, function (err, response) {
         if (err) throw err;
         res.json(response);
     });
@@ -38,8 +37,7 @@ routes.route("/api/accounts/add").post(function (req, res) {
         password: req.body.password
     }
     db_connect
-    .collection("accounts")
-    .insertOne(account, function (err, response) {
+    .collection("accounts").insertOne(account, function (err, response) {
         if (err) throw err;
         res.json(response);
     });

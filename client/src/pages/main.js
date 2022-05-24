@@ -11,17 +11,19 @@ class Main extends Component {
             letters: 0,
             maxletters: 64,
         }
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleChange = this.handleChange.bind(this)
     }
 
     async handleSubmit(event) {
         event.preventDefault();
         if(this.state.text.length > 0)
         {
+            let currentTime = new Date();
             let msg = {
                 id: 0,
                 text: this.state.text,
+                date: currentTime.toLocaleString()
             }
             await fetch("http://localhost:5000/api/messages/add", {
                 method: "POST",
