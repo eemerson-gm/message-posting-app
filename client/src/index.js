@@ -12,7 +12,6 @@ const token = new Token()
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement)
 
-
 root.render(
     <>
         <Helmet>
