@@ -1,6 +1,6 @@
 import React from "react";
 import {createRoot} from 'react-dom/client';
-import App from "./App";
+import App from "./app";
 import { BrowserRouter } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { Navbar, Container, Nav } from "react-bootstrap";
