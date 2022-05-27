@@ -2,9 +2,9 @@ import React from "react";
 
 import { Route, Routes } from "react-router-dom";
 
-import Main from "./pages/Main.js";
-import Login from "./pages/Login.js";
-import Signup from "./pages/Signup.js"
+import Main from "./pages/main.js";
+import Login from "./pages/login.js";
+import Signup from "./pages/signup.js"
  
 const App = () => {
   return (
