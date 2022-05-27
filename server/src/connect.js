@@ -1,9 +1,10 @@
+
 const { MongoClient } = require('mongodb');
-const Db = "mongodb+srv://admin:Fk6BHzMwoajEmTRC@cluster0.d8ivu.mongodb.net/msg-post-app?retryWrites=true&w=majority";
-const client = new MongoClient(Db, {
+
+const client = new MongoClient(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-});
+})
 
 var _database;
 

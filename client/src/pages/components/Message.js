@@ -7,7 +7,7 @@ class Message extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: "Player6595894156",
+            username: props.username,
             text: props.text,
             likes: props.likes,
             date: props.date

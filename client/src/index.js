@@ -6,8 +6,12 @@ import { Helmet } from "react-helmet";
 import { Navbar, Container, Nav } from "react-bootstrap";
 import './style.css';
 
+import Token from "./pages/components/Auth"
+const token = new Token()
+
 const rootElement = document.getElementById('root');
-const root = createRoot(rootElement);
+const root = createRoot(rootElement)
+
 
 root.render(
     <>
@@ -24,16 +28,18 @@ root.render(
                 <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
                     <Nav.Link href="/">Home</Nav.Link>
-                    <Nav.Link href="/login">Login</Nav.Link>
-                    <Nav.Link href="/signup">Signup</Nav.Link>
+                    {token.isLoggedIn ? null : <Nav.Link id="login" href="/login">Login</Nav.Link>}
+                    {token.isLoggedIn ? null : <Nav.Link id="signup" href="/signup">Signup</Nav.Link>}
+                    {token.isLoggedIn ? <Nav.Link id="logout" onClick={() => {
+                        token.remove("token")
+                        window.location.reload()
+                    }}>Logout</Nav.Link> : null}
                 </Nav>
                 </Navbar.Collapse>
             </Container>
         </Navbar>
-        <React.StrictMode>
-            <BrowserRouter>
-                <App />
-            </BrowserRouter>
-        </React.StrictMode>
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
     </>
 );

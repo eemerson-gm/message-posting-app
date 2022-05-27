@@ -1,13 +1,9 @@
 import React from "react";
 import { Container, Card, Form, FormGroup, FormControl, Button } from "react-bootstrap";
-import bcrypt from 'react-native-bcrypt';
 
 const validateUsername = new RegExp(
     '^[a-zA-Z0-9_.-]*$'
 );
-const validateEmail = new RegExp(
-    '^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$'
- );
 
 class Signup extends React.Component {
 
@@ -15,12 +11,8 @@ class Signup extends React.Component {
         super(props);
         this.state = {
             username: "",
-            email: "",
             password: "",
             confirm_password: "",
-            error_username: "",
-            error_email: "",
-            error_password: "",
             error_confirm_password: "",
             maxletters: 256,
         }
@@ -30,44 +22,38 @@ class Signup extends React.Component {
     async handleSubmit(event){
 
         event.preventDefault();
-        if(this.state.username === ""){ this.setState({ error_username: "*Username is required" }); return; }
-        if(this.state.email === ""){ this.setState({ error_email: "*Email is required" }); return; }
-        if(this.state.password === ""){ this.setState({ error_password: "*Password is required" }); return; }
         if((this.state.password !== this.state.confirm_password)){ this.setState({ error_confirm_password: "*Passwords do not match" }); return; }
         if(!validateUsername.test(this.state.username)){ this.setState({ error_username: "*Username is invalid (A-Z, 0-9)" }); return; }
-        if(!validateEmail.test(this.state.email)){ this.setState({ error_email: "*Email is not valid" }); return; }
-
-        let salt = bcrypt.genSaltSync(10);
-        let hash_password = bcrypt.hashSync(this.state.password, salt);
 
         let account = {
             username: this.state.username,
             email: this.state.email,
-            password: hash_password,
+            password: this.state.password,
         }
-        await fetch("http://localhost:5000/api/accounts/add", {
+        await fetch("http://localhost:5000/api/accounts/signup", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(account),
-        });
-        this.setState({
-            username: "",
-            email: "",
-            password: "",
-            confirm_password: "",
-            error_username: "",
-            error_email: "",
-            error_password: "",
-            error_confirm_password: ""
-        });
-
+        })
+        .then(res => {
+            if(res.status === 200)
+            {
+                window.location.replace("/login")
+            }
+            else
+            {
+                this.setState({ error_username: "*Username already exists" });
+            }
+        })
+        
     }
 
     render(){
         return (<>
             <Container>
+                <h1>Sign-Up</h1>
                 <Card className="mt-3">
                     <Card.Body className="p-3">
                         <Form onSubmit={this.handleSubmit}>
@@ -75,11 +61,6 @@ class Signup extends React.Component {
                                 <Form.Label className="mt-2 mb-2">Username:</Form.Label>
                                 <FormControl type="text" id="messagebox" placeholder="Username..." minLength="4" maxLength={this.state.maxletters} value={this.state.username} onChange={(e) => this.setState({ username: e.target.value })} required/>
                                 <Form.Label className="text-danger">{this.state.error_username}</Form.Label>
-                            </FormGroup>
-                            <FormGroup>
-                                <Form.Label className="mt-2 mb-2">Email:</Form.Label>
-                                <FormControl type="text" id="messagebox" placeholder="Email Address..." maxLength={this.state.maxletters} value={this.state.email} onChange={(e) => this.setState({ email: e.target.value })} required/>
-                                <Form.Label className="text-danger">{this.state.error_email}</Form.Label>
                             </FormGroup>
                             <FormGroup>
                                 <Form.Label className="mt-2 mb-2">Password:</Form.Label>

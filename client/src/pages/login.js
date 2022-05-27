@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Card, Form, FormGroup, FormControl, Button } from "react-bootstrap";
-import bcrypt from 'react-native-bcrypt';
-
+import Token from "./components/Auth"
+const token = new Token()
 
 class Login extends React.Component {
 
@@ -9,13 +9,9 @@ class Login extends React.Component {
         super(props);
         this.state = {
             username: "",
-            email: "",
             password: "",
-            confirm_password: "",
             error_username: "",
-            error_email: "",
             error_password: "",
-            error_confirm_password: "",
             maxletters: 256,
         }
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -25,28 +21,32 @@ class Login extends React.Component {
 
         event.preventDefault();
 
-        let salt = bcrypt.genSaltSync(10);
-        let hash_email = bcrypt.hashSync(this.state.email, salt);
-        let hash_password = bcrypt.hashSync(this.state.password, salt);
-
         let account = {
             username: this.state.username,
-            email: hash_email,
-            password: hash_password,
+            password: this.state.password,
         }
-        await fetch("http://localhost:5000/api/accounts/add", {
+        await fetch("http://localhost:5000/api/accounts/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(account),
+        })
+        .then(res => res.json())
+        .then(async data => {
+            if(data !== false)
+            {
+                token.set("token", data, {path: "/", sameSite: true})
+            }
         });
+        window.location.replace("/")
 
     }
 
     render(){
         return (<>
             <Container>
+                <h1>Login</h1>
                 <Card className="mt-3">
                     <Card.Body className="p-3">
                         <Form onSubmit={this.handleSubmit}>
@@ -56,18 +56,11 @@ class Login extends React.Component {
                                 <Form.Label className="text-danger">{this.state.error_username}</Form.Label>
                             </FormGroup>
                             <FormGroup>
-                                <Form.Label className="mt-2 mb-2">Email:</Form.Label>
-                                <FormControl type="text" id="messagebox" placeholder="Email Address..." maxLength={this.state.maxletters} value={this.state.email} onChange={(e) => this.setState({ email: e.target.value })} required/>
-                                <Form.Label className="text-danger">{this.state.error_email}</Form.Label>
-                            </FormGroup>
-                            <FormGroup>
                                 <Form.Label className="mt-2 mb-2">Password:</Form.Label>
                                 <FormControl  type="password" id="messagebox" placeholder="Password..." maxLength={this.state.maxletters} value={this.state.password} onChange={(e) => this.setState({ password: e.target.value })} required/>
                                 <Form.Label className="text-danger">{this.state.error_password}</Form.Label>
-                                <FormControl  type="password" className="mt-2" id="messagebox" placeholder="Confirm Password..." maxLength={this.state.maxletters} value={this.state.confirm_password} onChange={(e) => this.setState({ confirm_password: e.target.value })} required/>
-                                <Form.Label className="text-danger">{this.state.error_confirm_password}</Form.Label>
                             </FormGroup>
-                            <Button className="mt-2" variant="primary" type="submit">Signup</Button>
+                            <Button className="mt-2" variant="primary" type="submit">Login</Button>
                         </Form>
                     </Card.Body>
                 </Card>

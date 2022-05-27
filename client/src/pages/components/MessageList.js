@@ -9,7 +9,7 @@ class MessageList extends Component {
         super(props);
         this.state = {
             offset: 0,
-            limit: 4,
+            limit: 10,
             loading: false,
             messages: [],
         }
@@ -40,7 +40,7 @@ class MessageList extends Component {
         return (dataLength > 0)
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.handleLoading();
         const self = this;
         window.addEventListener('scroll', async () => {
@@ -51,17 +51,24 @@ class MessageList extends Component {
                 if(result) {
                     this.setState({loading: false});
                 }
+                else
+                {
+                    document.getElementById('loading').style.visibility = 'hidden';
+                }
             }
         });
+        if(this.state.messages.length <= this.state.limit)
+        {
+            document.getElementById('loading').style.visibility = 'hidden';
+        }
     }
 
     render(){
         return <>
-                    {this.state.offset}
                     {this.state.messages.map((item, index) => {
-                        return <Message key={index} id={item.id} text={item.text} likes={item.likes} date={item.date}/>
+                        return <Message key={index} username={item.username} text={item.text} likes={item.likes} date={item.date}/>
                     })}
-                    <Container className="text-center mt-4 mb-4">
+                    <Container id="loading" className="text-center mt-4 mb-4">
                         <span className="spinner-border spinner-border-lg align-middle text-primary"></span>
                         <span className="ml-2 text-primary align-middle" style={{fontSize: "24px"}}>Loading...</span>
                     </Container>
