@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm install --prefix server && npm install --prefix client && npm run build --prefix client && concurrently \"npm run server\" \"npm run client\"",
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "build": "npm install --prefix server && npm install --prefix client && npm run build --prefix client",
     "client": "npm run serve --prefix client",
     "server": "npm start --prefix server"
   },
