@@ -30,7 +30,7 @@ class Main extends Component {
                     text: this.state.text,
                     date: currentTime.toLocaleString()
                 }
-                await fetch("http://localhost:5000/api/messages/add", {
+                await fetch("/api/messages/add", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

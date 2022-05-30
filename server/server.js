@@ -6,7 +6,7 @@ const express = require('express')
 const cookieParser = require("cookie-parser")
 const sessions = require('express-session')
 const cors = require('cors')
-const port = process.env.PORT || 80
+const port = process.env.PORT || 5000
 const dbo = require('./src/connect')
 
 // App

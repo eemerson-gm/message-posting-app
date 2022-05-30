@@ -15,7 +15,7 @@ export default class Token extends Cookie {
 
     async validateToken() {
         var account;
-        await fetch("http://localhost:5000/api/accounts/token", {
+        await fetch("/api/accounts/token", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

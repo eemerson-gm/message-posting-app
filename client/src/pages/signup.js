@@ -30,7 +30,7 @@ class Signup extends React.Component {
             email: this.state.email,
             password: this.state.password,
         }
-        await fetch("http://localhost:5000/api/accounts/signup", {
+        await fetch("/api/accounts/signup", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

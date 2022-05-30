@@ -22,7 +22,7 @@ class MessageList extends Component {
             offset: this.state.offset,
             limit: this.state.limit
         }
-        await fetch("http://localhost:5000/api/messages/list", {
+        await fetch("/api/messages/list", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
