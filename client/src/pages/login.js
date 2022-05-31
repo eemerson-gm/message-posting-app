@@ -19,13 +19,14 @@ class Login extends React.Component {
 
     async handleSubmit(event){
         event.preventDefault()
-        let token = await server.fetchJSON("/api/accounts/login", {
+        let info = await server.fetchJSON("/api/accounts/login", {
             username: this.state.username,
             password: this.state.password
         })
-        if(token !== false)
+        if(info !== false)
         {
-            server.cookies.set("token", token, {path: "/", sameSite: true})
+            server.cookies.set("username", info.username, {path: "/", sameSite: true})
+            server.cookies.set("token", info.token, {path: "/", sameSite: true})
         }
         window.location.replace("/")
     }

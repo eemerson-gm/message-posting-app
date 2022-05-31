@@ -118,8 +118,11 @@ routes.route("/api/accounts/login").post(function (req, res) {
                     },process.env.WEBTOKEN_KEY,{
                         expiresIn: "2h"
                     })
-                    console.log(token)
-                    res.json(token)
+                    let info = {
+                        username: dbaccount.username,
+                        token: token
+                    }
+                    res.json(info)
                 }
                 else
                 {

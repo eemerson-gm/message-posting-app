@@ -18,7 +18,7 @@ class Message extends Component {
             isLiked: false
         }
         this.handleLike = this.handleLike.bind(this)
-        this.state.isLiked = (this.state.likes.includes(this.state.username))
+        this.state.isLiked = (this.state.likes.includes(server.cookies.get("username")))
     }
 
     handleLike() {
