@@ -6,7 +6,7 @@ const express = require('express')
 const cookieParser = require("cookie-parser")
 const sessions = require('express-session')
 const cors = require('cors')
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 80
 const dbo = require('./src/connect')
 
 // App
@@ -19,8 +19,8 @@ app.use(express.static("../client/build"))
 
 // Start server
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../client/build", "index.html"));
-});
+    res.sendFile(path.join(__dirname, "../client/build", "index.html"))
+})
 
 app.listen(port, () => {
     dbo.connectToDatabase(function(err){

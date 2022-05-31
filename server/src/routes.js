@@ -20,13 +20,14 @@ routes.route("/api/messages/list").post(function (req, res) {
 routes.route("/api/messages/add").post(function (req, res) {
     let db_connect = dbo.getDatabase()
     try{
+        let date = new Date()
         let token = req.body.token
         const decoded = jwt.verify(token, process.env.WEBTOKEN_KEY)
         let message = {
             username: decoded.username,
             text: req.body.text,
-            date: req.body.date,
-            likes: 0
+            date: date.toLocaleString(),
+            likes: []
         }
         db_connect.collection("messages").insertOne(message, function (err, response) {
             if (err) throw err
@@ -36,12 +37,50 @@ routes.route("/api/messages/add").post(function (req, res) {
         res.status(401).send(false)
     }
 })
+routes.route("/api/messages/like").post(function (req, res) {
+    let db_connect = dbo.getDatabase()
+    try{
+        let date = new Date()
+        let token = req.body.token
+        const decoded = jwt.verify(token, process.env.WEBTOKEN_KEY)
+        let info = {
+            username: decoded.username,
+            value: req.body.value,
+            id: req.body.id
+        }
+        switch(info.value){
+            case -1:
+                db_connect.collection("messages").findOneAndUpdate({
+                    _id: ObjectId(info.id)
+                }, {
+                    $pull: {
+                        likes: info.username
+                    }
+                })
+                console.log("Removed like from: " + info.id)
+                break
+            default:
+                db_connect.collection("messages").findOneAndUpdate({
+                    _id: ObjectId(info.id)
+                }, {
+                    $push: {
+                        likes: info.username
+                    }
+                })
+                console.log("Added like to: " + info.id)
+                break
+        }
+    } catch(err) {
+        throw err
+        res.status(401).send(false)
+    }
+})
 
 //Accounts
 routes.route("/api/accounts/signup").post(function (req, res) {
     let db_connect = dbo.getDatabase()
     let account = {
-        username: req.body.username,
+        username: req.body.username.toLowerCase(),
         password: req.body.password
     }
     db_connect.collection("accounts").findOne({ username: account.username }, function (err, dbaccount) {
@@ -49,7 +88,7 @@ routes.route("/api/accounts/signup").post(function (req, res) {
         {
             bcrypt.genSalt(saltRounds, function(err, salt) {
                 bcrypt.hash(account.password, salt, function(err, hash) {
-                    account.password = hash;
+                    account.password = hash
                     db_connect.collection("accounts").insertOne(account, function (err, response) {
                         if (err) throw err
                         res.json(response)
@@ -66,7 +105,7 @@ routes.route("/api/accounts/signup").post(function (req, res) {
 routes.route("/api/accounts/login").post(function (req, res) {
     let db_connect = dbo.getDatabase()
     let account = {
-        username: req.body.username,
+        username: req.body.username.toLowerCase(),
         password: req.body.password
     }
     db_connect.collection("accounts").findOne({ username: account.username }, function (err, dbaccount) {
@@ -79,8 +118,8 @@ routes.route("/api/accounts/login").post(function (req, res) {
                     },process.env.WEBTOKEN_KEY,{
                         expiresIn: "2h"
                     })
-                    console.log({token: token})
-                    res.json({token: token})
+                    console.log(token)
+                    res.json(token)
                 }
                 else
                 {
@@ -89,16 +128,6 @@ routes.route("/api/accounts/login").post(function (req, res) {
             })
         }
     })
-})
-routes.route("/api/accounts/token").post(function (req, res) {
-    let db_connect = dbo.getDatabase()
-    try{
-        let token = req.body.token
-        const decoded = jwt.verify(token, process.env.WEBTOKEN_KEY)
-        res.status(200).send(decoded)
-    } catch(err) {
-        res.status(401).send(false)
-    }
 })
 
 module.exports = routes

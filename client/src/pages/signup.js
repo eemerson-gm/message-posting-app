@@ -1,14 +1,16 @@
-import React from "react";
-import { Container, Card, Form, FormGroup, FormControl, Button } from "react-bootstrap";
+import React from "react"
+import { Container, Card, Form, FormGroup, FormControl, Button } from "react-bootstrap"
+import Server from "../classes/orange-server"
+const server = new Server()
 
 const validateUsername = new RegExp(
     '^[a-zA-Z0-9_.-]*$'
-);
+)
 
 class Signup extends React.Component {
 
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             username: "",
             password: "",
@@ -16,37 +18,28 @@ class Signup extends React.Component {
             error_confirm_password: "",
             maxletters: 256,
         }
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this)
     }
 
     async handleSubmit(event){
 
-        event.preventDefault();
-        if((this.state.password !== this.state.confirm_password)){ this.setState({ error_confirm_password: "*Passwords do not match" }); return; }
-        if(!validateUsername.test(this.state.username)){ this.setState({ error_username: "*Username is invalid (A-Z, 0-9)" }); return; }
+        event.preventDefault()
+        if((this.state.password !== this.state.confirm_password)){ this.setState({ error_confirm_password: "*Passwords do not match" }); return }
+        if(!validateUsername.test(this.state.username)){ this.setState({ error_username: "*Username is invalid (A-Z, 0-9)" }); return }
 
-        let account = {
+        let res = await server.fetchJSON("/api/accounts/signup", {
             username: this.state.username,
             email: this.state.email,
             password: this.state.password,
+        })
+        if(res !== false)
+        {
+            window.location.replace("/login")
         }
-        await fetch("/api/accounts/signup", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(account),
-        })
-        .then(res => {
-            if(res.status === 200)
-            {
-                window.location.replace("/login")
-            }
-            else
-            {
-                this.setState({ error_username: "*Username already exists" });
-            }
-        })
+        else
+        {
+            this.setState({ error_username: "*Username already exists" })
+        }
         
     }
 
@@ -74,9 +67,9 @@ class Signup extends React.Component {
                     </Card.Body>
                 </Card>
             </Container>
-        </>);
+        </>)
     }
 
 }
 
-export default Signup;
+export default Signup

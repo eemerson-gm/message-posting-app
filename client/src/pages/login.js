@@ -1,12 +1,12 @@
-import React from "react";
-import { Container, Card, Form, FormGroup, FormControl, Button } from "react-bootstrap";
-import Token from "./components/Auth"
-const token = new Token()
+import React from "react"
+import { Container, Card, Form, FormGroup, FormControl, Button } from "react-bootstrap"
+import Server from "../classes/orange-server"
+const server = new Server()
 
 class Login extends React.Component {
 
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             username: "",
             password: "",
@@ -14,33 +14,20 @@ class Login extends React.Component {
             error_password: "",
             maxletters: 256,
         }
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this)
     }
 
     async handleSubmit(event){
-
-        event.preventDefault();
-
-        let account = {
+        event.preventDefault()
+        let token = await server.fetchJSON("/api/accounts/login", {
             username: this.state.username,
-            password: this.state.password,
-        }
-        await fetch("/api/accounts/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(account),
+            password: this.state.password
         })
-        .then(res => res.json())
-        .then(async data => {
-            if(data !== false)
-            {
-                token.set("token", data, {path: "/", sameSite: true})
-            }
-        });
+        if(token !== false)
+        {
+            server.cookies.set("token", token, {path: "/", sameSite: true})
+        }
         window.location.replace("/")
-
     }
 
     render(){
@@ -65,9 +52,9 @@ class Login extends React.Component {
                     </Card.Body>
                 </Card>
             </Container>
-        </>);
+        </>)
     }
 
 }
 
-export default Login;
+export default Login

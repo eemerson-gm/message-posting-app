@@ -1,16 +1,50 @@
 
-import React, { Component } from 'react';
-import { Button, Container, Card, Row, Col } from 'react-bootstrap';
+import React, { Component } from 'react'
+import { Button, Container, Card, Row, Col } from 'react-bootstrap'
+import Server from './../../classes/orange-server'
+const server = new Server()
 
 class Message extends Component {
 
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             username: props.username,
+            id: props.id,
             text: props.text,
             likes: props.likes,
-            date: props.date
+            likeCount: props.likes.length,
+            date: props.date,
+            isLiked: false
+        }
+        this.handleLike = this.handleLike.bind(this)
+        this.state.isLiked = (this.state.likes.includes(this.state.username))
+    }
+
+    handleLike(event) {
+        event.preventDefault()
+        if(this.state.isLiked){
+            server.fetchJSON("/api/messages/like", {
+                token: server.token,
+                value: -1,
+                id: this.state.id
+            })
+            this.setState({
+                likeCount: this.state.likeCount - 1,
+                isLiked: false
+            })
+        }
+        else
+        {
+            server.fetchJSON("/api/messages/like", {
+                token: server.token,
+                id: this.state.id
+            })
+            this.setState({
+                likeCount: this.state.likeCount + 1,
+                value: 1,
+                isLiked: true
+            })
         }
     }
 
@@ -33,15 +67,15 @@ class Message extends Component {
                                         <Card.Text>{this.state.text}</Card.Text>
                                     </Col>
                                     <Col className="text-right">
-                                        <Button variant="primary">★ {this.state.likes} Likes</Button>
+                                        <Button variant="primary" onClick={this.handleLike}>★ {this.state.likeCount} Likes</Button>
                                     </Col>
                                 </Row>
                             </Card.Body>
                         </Card>
                     </Container>
-                </>;
+                </>
     }
 
 }
 
-export default Message;
+export default Message

@@ -1,15 +1,14 @@
-import React from "react";
-import {createRoot} from 'react-dom/client';
-import App from "./App";
-import { BrowserRouter } from "react-router-dom";
-import { Helmet } from "react-helmet";
-import { Navbar, Container, Nav } from "react-bootstrap";
-import './style.css';
+import React from "react"
+import {createRoot} from 'react-dom/client'
+import App from "./app"
+import { BrowserRouter } from "react-router-dom"
+import { Helmet } from "react-helmet"
+import { Navbar, Container, Nav } from "react-bootstrap"
+import Server from './classes/orange-server'
+import './style.css'
 
-import Token from "./pages/components/Auth"
-const token = new Token()
-
-const rootElement = document.getElementById('root');
+const server = new Server('config.json')
+const rootElement = document.getElementById('root')
 const root = createRoot(rootElement)
 
 root.render(
@@ -20,6 +19,7 @@ root.render(
             <link href="https://fonts.googleapis.com/css2?family=Oleo+Script+Swash+Caps&display=swap" rel="stylesheet" />
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css"></link>
         </Helmet>
+        <script>0</script>
         <Navbar bg="light" expand="lg">
             <Container>
                 <Navbar.Brand href="/" className="classy">Tiny Message App</Navbar.Brand>
@@ -27,10 +27,10 @@ root.render(
                 <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
                     <Nav.Link href="/">Home</Nav.Link>
-                    {token.isLoggedIn ? null : <Nav.Link id="login" href="/login">Login</Nav.Link>}
-                    {token.isLoggedIn ? null : <Nav.Link id="signup" href="/signup">Signup</Nav.Link>}
-                    {token.isLoggedIn ? <Nav.Link id="logout" onClick={() => {
-                        token.remove("token")
+                    {server.isLoggedIn ? null : <Nav.Link id="login" href="/login">Login</Nav.Link>}
+                    {server.isLoggedIn ? null : <Nav.Link id="signup" href="/signup">Signup</Nav.Link>}
+                    {server.isLoggedIn ? <Nav.Link id="logout" onClick={() => {
+                        server.cookies.remove("token")
                         window.location.reload()
                     }}>Logout</Nav.Link> : null}
                 </Nav>
@@ -41,4 +41,4 @@ root.render(
             <App />
         </BrowserRouter>
     </>
-);
+)

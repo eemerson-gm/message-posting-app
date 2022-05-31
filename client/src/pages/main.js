@@ -1,12 +1,13 @@
-import React, { Component } from "react";
-import { Button, Container, Card, Form, FormGroup, FormControl } from "react-bootstrap";
-import MessageList from "./components/MessageList";
-import Token from "./components/Auth"
+import React, { Component } from "react"
+import { Button, Container, Card, Form, FormGroup, FormControl } from "react-bootstrap"
+import MessageList from "./components/messagelist"
+import Server from "../classes/orange-server"
+const server = new Server()
 
 class Main extends Component {
 
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             username: "",
             text: "",
@@ -15,40 +16,30 @@ class Main extends Component {
         }
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
-        this.token = new Token()
     }
 
     async handleSubmit(event) {
-        event.preventDefault();
+        event.preventDefault()
         if(this.state.text.length > 0)
         {
-            if(this.token.validateToken())
+            let res = await server.fetchJSON("/api/messages/add", {
+                token: server.token,
+                text: this.state.text
+            })
+            if(res !== false)
             {
-                let currentTime = new Date();
-                let msg = {
-                    token: this.token.token.token,
-                    text: this.state.text,
-                    date: currentTime.toLocaleString()
-                }
-                await fetch("/api/messages/add", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(msg),
-                });
                 window.location.reload()
             }
         }
     }
 
     handleChange(event) {
-        this.setState({ text: event.target.value, letters: event.target.value.length });
+        this.setState({ text: event.target.value, letters: event.target.value.length })
     }
     
     render(){
         return(<>
-                    { this.token.isLoggedIn ?
+                    { server.isLoggedIn ?
                     <Container>
                         <Card className="mt-3">
                             <Card.Body className="p-3">
@@ -65,8 +56,8 @@ class Main extends Component {
                     </Container> : null}
                     <MessageList />
                 </>
-        );
+        )
     }
 }
 
-export default Main;
+export default Main
