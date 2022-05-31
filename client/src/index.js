@@ -18,8 +18,10 @@ root.render(
             <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
             <link href="https://fonts.googleapis.com/css2?family=Oleo+Script+Swash+Caps&display=swap" rel="stylesheet" />
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css"></link>
+            <script>
+                let FF_FOUC_FIX;
+            </script>
         </Helmet>
-        <script>0</script>
         <Navbar bg="light" expand="lg">
             <Container>
                 <Navbar.Brand href="/" className="classy">Tiny Message App</Navbar.Brand>
