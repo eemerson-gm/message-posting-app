@@ -21,30 +21,31 @@ class Message extends Component {
         this.state.isLiked = (this.state.likes.includes(this.state.username))
     }
 
-    handleLike(event) {
-        event.preventDefault()
-        if(this.state.isLiked){
-            server.fetchJSON("/api/messages/like", {
-                token: server.token,
-                value: -1,
-                id: this.state.id
-            })
-            this.setState({
-                likeCount: this.state.likeCount - 1,
-                isLiked: false
-            })
-        }
-        else
-        {
-            server.fetchJSON("/api/messages/like", {
-                token: server.token,
-                id: this.state.id
-            })
-            this.setState({
-                likeCount: this.state.likeCount + 1,
-                value: 1,
-                isLiked: true
-            })
+    handleLike() {
+        if(this.server.isLoggedIn()) {
+            if(this.state.isLiked){
+                server.fetchJSON("/api/messages/like", {
+                    token: server.token,
+                    value: -1,
+                    id: this.state.id
+                })
+                this.setState({
+                    likeCount: this.state.likeCount - 1,
+                    isLiked: false
+                })
+            }
+            else
+            {
+                server.fetchJSON("/api/messages/like", {
+                    token: server.token,
+                    value: 1,
+                    id: this.state.id
+                })
+                this.setState({
+                    likeCount: this.state.likeCount + 1,
+                    isLiked: true
+                })
+            }
         }
     }
 
