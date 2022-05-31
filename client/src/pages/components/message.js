@@ -22,7 +22,7 @@ class Message extends Component {
     }
 
     handleLike() {
-        if(server.isLoggedIn()) {
+        if(server.isLoggedIn) {
             if(this.state.isLiked){
                 server.fetchJSON("/api/messages/like", {
                     token: server.token,
